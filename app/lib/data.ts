@@ -19,7 +19,8 @@ export async function fetchRevenue() {
 
     const data = await sql<Revenue>`SELECT * FROM revenue`;
 
-    // console.log('Data fetch completed after 3 seconds.');
+    console.log('Data fetch completed after 3 seconds.');
+    console.log('Data:', data);
 
     return data.rows;
   } catch (error) {
@@ -41,6 +42,7 @@ export async function fetchLatestInvoices() {
       ...invoice,
       amount: formatCurrency(invoice.amount),
     }));
+    console.log('Latest Invoices:', latestInvoices);
     return latestInvoices;
   } catch (error) {
     console.error('Database Error:', error);
@@ -60,7 +62,7 @@ export async function fetchCardData() {
          SUM(CASE WHEN status = 'pending' THEN amount ELSE 0 END) AS "pending"
          FROM invoices`;
 
-    const data = await Promise.all([
+    const data = await Promise.all([ /// Parallel data fetching
       invoiceCountPromise,
       customerCountPromise,
       invoiceStatusPromise,
